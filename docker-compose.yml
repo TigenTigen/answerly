@@ -1,0 +1,126 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:11.4-alpine
+    networks:
+      - db_int_network
+    volumes:
+      - psql_db_data:/var/lib/postgresql/data
+    secrets:
+      - psql-pw
+      - psql-user
+      - psql-db
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/psql-pw
+      POSTGRES_USER_FILE: /run/secrets/psql-user
+      POSTGRES_DB_FILE: /run/secrets/psql-db
+    restart: always
+    deploy:
+      replicas: 1
+
+  elasticsearch:
+    image: elasticsearch:7.3.1
+    networks:
+      - elasticsearch_int_network
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    deploy:
+      replicas: 1
+
+  apache:
+    build:
+      context: ./apache
+      args:
+        git_user_name: 'docker_user'
+        git_user_email: 'example@email.com'
+    image: tigen/apache_for_django:answerly
+    networks:
+      - nginx_ext_network
+      - db_int_network
+      - elasticsearch_int_network
+    volumes:
+      - ./django:/var/www/html/django_project/django
+      - static_folder:/var/www/static
+      - user_migrations:/var/www/html/django_project/django/user/migrations
+      - core_migrations:/var/www/html/django_project/django/core/migrations
+    secrets:
+      - psql-pw
+      - psql-user
+      - psql-db
+      - django-sk
+      - django-eh
+      - django-ehu
+      - django-ehp
+    environment:
+      HOST_IP: $HOST_IP
+      HOST_NAME: $HOST_NAME
+      POSTGRES_PASSWORD_FILE: /run/secrets/psql-pw
+      POSTGRES_USER_FILE: /run/secrets/psql-user
+      POSTGRES_DB_FILE: /run/secrets/psql-db
+      DJANGO_SK_FILE: /run/secrets/django-sk
+      DJANGO_EH_FILE: /run/secrets/django-eh
+      DJANGO_EHU_FILE: /run/secrets/django-ehu
+      DJANGO_EHP_FILE: /run/secrets/django-ehp
+    restart: always
+    depends_on:
+      - postgres
+      - elasticsearch
+    deploy:
+      replicas: 1
+
+  nginx:
+    build: ./nginx
+    image: tigen/nginx_for_django:answerly
+    environment:
+      HOST_IP: $HOST_IP
+      HOST_NAME: $HOST_NAME
+    networks:
+      - nginx_ext_network
+    ports:
+      - "80:80"
+    volumes:
+      - static_folder:/usr/share/nginx/html/static
+    depends_on:
+      - apache
+    deploy:
+      replicas: 1
+
+networks:
+  nginx_ext_network:
+  db_int_network:
+    internal: true
+  elasticsearch_int_network:
+    internal: true
+
+volumes:
+  psql_db_data:
+  static_folder:
+  user_migrations:
+  core_migrations:
+  esdata:
+
+secrets:
+  psql-pw:
+    file : secrets/psql-pw
+  psql-user:
+    file : secrets/psql-user
+  psql-db:
+    file : secrets/psql-db
+  django-sk:
+    file : secrets/django-sk
+  django-eh:
+    file : secrets/django-eh
+  django-ehu:
+    file : secrets/django-ehu
+  django-ehp:
+    file : secrets/django-ehp

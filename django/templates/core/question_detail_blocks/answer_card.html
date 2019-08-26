@@ -1,0 +1,48 @@
+{% block answer_card %}
+  {% if answer.is_accepted %}<div class="card text-white bg-warning my-2">{% else %}<div class="card my-2">{% endif %}
+    <div class="card-body">
+      <div class="d-flex flex-row">
+        {% if answer.is_accepted %}
+          {% if reject_form %}
+            <form action="{% url 'core:update_answer_acceptance' pk=answer.id %}" method="post">
+              {% csrf_token %}
+              {{reject_form}}
+              <button type="submit" class="btn btn-warning text-white active" data-toggle="tooltip" data-placement="right" title="Выбранный Вами ответ. Отказаться?">
+                <i class="material-icons" style="font-size: 36px;">
+                  done_outline
+                </i>
+              </button>
+            </form>
+          {% else %}
+            <button type="btn" class="btn btn-warning text-white disabled" data-toggle="tooltip" data-placement="right" title="Данный ответ принят автором вопроса">
+              <i class="material-icons" style="font-size: 36px;">
+                done_outline
+              </i>
+            </button>
+          {% endif %}
+        {% elif accept_form %}
+          <form action="{% url 'core:update_answer_acceptance' pk=answer.id %}" method="post">
+            {% csrf_token %}
+            {{accept_form}}
+            <button type="submit" class="btn btn-white text-secondary bg-transparent" data-toggle="tooltip" data-placement="right" title="Принять данный ответ?">
+              <i class="material-icons" style="font-size: 36px;">
+                done_outline
+              </i>
+            </button>
+          </form>
+        {% else %}
+          <button type="btn" class="btn btn-link text-white disabled">
+            <i class="material-icons" style="font-size: 36px;">
+              done_outline
+            </i>
+          </button>
+        {% endif %}
+        <div class="d-flex flex-column ml-4">
+          <h5 class="card-title">Автор: {{answer.user.username}}</h5>
+          <h6 class="card-subtitle text-muted">Опубликовано: {{answer.created|default_if_none:"-"}}</h6>
+        </div>
+      </div>
+      <p class="card-text">{{answer.text}}</p>
+    </div>
+  </div>
+{% endblock %}

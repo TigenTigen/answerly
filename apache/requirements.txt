@@ -1,0 +1,5 @@
+django==2.1
+psycopg2-binary
+django-crispy-forms==1.7.0
+elasticsearch
+coverage===4.4.2

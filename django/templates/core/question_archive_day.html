@@ -1,0 +1,39 @@
+{% extends 'layout/wrapper.html' %}
+
+{% block title %}Вопросы за {{day}}{% endblock %}
+
+{% block day_pagination %}
+  {% if next_day %}
+    <li class="nav-item">
+      <a class="nav-link text-body" href="{% url 'core:daily_questions' year=next_day.year month=next_day.month day=next_day.day %}">
+        <<< {{next_day}}
+      </a>
+    </li>
+    <li class="nav-item  nav-link">...</li>
+  {% endif %}
+  {% if previous_day %}
+    <li class="nav-item">
+      <a class="nav-link text-body" href="{% url 'core:daily_questions' year=previous_day.year month=previous_day.month day=previous_day.day %}">
+        {% if next_day %}
+           {{previous_day}} >>>
+        {% else %}
+          вчера
+        {% endif %}
+      </a>
+    </li>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% include 'layout/search_form.html' %}
+
+  <div class="card-columns m-4">
+    {% for object in object_list %}
+    <a href="{{object.get_absolute_url}}" class="list-group-item-action p-0">
+      {% include 'core/question_detail_blocks/question_card.html' %}
+    </a>
+    {% empty %}
+      <p>За данный день вопросы отсутсвуют</p>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'layout/modal_wrapper.html' %}
+
+{% block title %}Предложить ответ{% endblock %}
+{% block modal_title %}Предложить ответ{% endblock %}
+
+{% block modal_content %}
+  <p>Вопрос:</p>
+  {% include 'core/question_detail_blocks/question_card.html' %}
+  {% if preview %}
+    <p>Предварительный просмотр ответа:</p>
+    {% include 'core/question_detail_blocks/answer_card.html' with answer=preview %}
+  {% endif %}
+  {% include 'core/question_detail_blocks/answer_post_form.html' with answer_form=form %}
+{% endblock %}

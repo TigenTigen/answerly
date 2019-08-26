@@ -1,0 +1,17 @@
+{% extends 'layout/wrapper.html' %}
+
+{% block title %}{{question.title}}{% endblock %}
+
+{% block content %}
+  {% include 'core/question_detail_blocks/question_card.html' %}
+  {% for answer in object.answer_set.all %}
+    {% include 'core/question_detail_blocks/answer_card.html' %}
+  {% empty %}
+    <p>Станьте первым, кто предложит ответ на данный вопрос.</p>
+  {% endfor%}
+  {% if user.is_authenticated %}
+    {% include 'core/question_detail_blocks/answer_post_form.html' %}
+  {% else %}
+    <p>Только зарегистрированные пользователи могут добавлять вопросы или отвечать на них.</p>
+  {% endif %}
+{% endblock %}

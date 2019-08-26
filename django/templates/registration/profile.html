@@ -1,0 +1,13 @@
+{% extends 'layout/wrapper.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+  <p class="m-0">Имя пользователя: {{user.username}}</p>
+  <p class="m-0">Адрес электронной почты: {{user.email}}</p>
+  <p class="m-0">Дата регистрации: {{user.date_joined}}</p>
+  <p class="m-0">Дата последнего входа на сайт: {{user.last_login}}</p>
+
+  <a href="{% url 'user:password_change'%}" class="btn btn-light my-4">Сменить пароль</a>
+
+{% endblock %}

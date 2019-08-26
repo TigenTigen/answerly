@@ -1,0 +1,15 @@
+{% extends 'layout/wrapper.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+  {% include 'layout/search_form.html' %}
+
+  <div class="card-columns m-4">
+    {% for object in object_list %}
+    <a href="{{object.get_absolute_url}}" class="list-group-item-action p-0">
+      {% include 'core/question_detail_blocks/question_card.html' %}
+    </a>
+    {% endfor %}
+  </div>
+{% endblock %}

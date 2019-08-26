@@ -1,0 +1,19 @@
+{% extends 'layout/modal_wrapper.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Задайте вопрос{% endblock %}
+{% block modal_title %}Задайте вопрос{% endblock %}
+
+{% block modal_content %}
+  {% if preview %}
+    <p>Предварительный просмотр вопроса:</p>
+    {% include 'core/question_detail_blocks/question_card.html' with object=preview %}
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{form | crispy }}
+    <button class="btn btn-warning" type="submit" name="action" value="preview" id="ask">Предварительный просмотр</button>
+    <button class="btn btn-warning" type="submit" name="action" value="save">Опубликовать</button>
+  </form>
+{% endblock %}

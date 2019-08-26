@@ -1,0 +1,14 @@
+{% block answer_post_form %}
+  {% load crispy_forms_tags %}
+  <div class="card text-white bg-warning  my-2">
+    <div class="card-body">
+      <h5 class="card-title">Предложите свой ответ:</h5>
+      <form method="post" action="{% url 'core:answer' pk=object.id %}">
+        {% csrf_token %}
+        {{answer_form | crispy}}
+        <button class="btn btn-white" type="submit" name="action" value="preview">Предварительный просмотр</button>
+        <button class="btn btn-white" type="submit" name="action" value="save">Опубликовать</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

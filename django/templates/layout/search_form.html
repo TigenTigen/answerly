@@ -1,0 +1,11 @@
+{% block answer_post_form %}
+  <form class="form-group my-4" method="get" action="{% url 'core:search' %}">
+    <div class="input-group mb-3">
+      <input type="search" name="query" value="{{query}}" class="form-control" placeholder="Поиск">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-warning">Поиск</button>
+      </div>
+    </div>
+  </form>
+  <hr>
+{% endblock %}

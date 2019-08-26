@@ -1,0 +1,12 @@
+{% block question_card %}
+  <div class="card my-2">
+    <div class="card-body">
+      <h5 class="card-title">{{object.title}}</h5>
+      <div class="d-flex flex-column">
+        <h6 class="card-subtitle text-muted mb-1">Автор: {{object.user.username}}</h6>
+        <h6 class="card-subtitle text-muted mb-1">Опубликовано: {{object.created|default_if_none:"-" }}</h6>
+      </div>
+      <p class="card-text">{{object.text}}</p>
+    </div>
+  </div>
+{% endblock %}

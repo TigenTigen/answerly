@@ -1,0 +1,12 @@
+{% extends 'emails/base.html' %}
+
+{% block body %}
+  {{body}}
+
+  ---
+
+  Вы получили данное письмо, так как ранее подписались на рассылку {{mailinglist}}.
+  Если вы больше не хотите получать сообщения по данной рассылке, перейдите по ссылке <a href="http://{{unsubscribtion_link}}">http://{{unsubscribtion_link}}</a>
+
+  Отправлено посредством Answerly.
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'layout/wrapper.html' %}
+
+{% block title %}Поиск{% endblock %}
+
+{% block content %}
+  {% include 'layout/search_form.html' %}
+
+  {% if query %}
+  <p>Результаты поиска для '{{query}}':</p>
+    {% for object in hits %}
+    <a href="{{object.get_absolute_url}}" class="list-group-item-action p-0">
+      {% include 'core/question_detail_blocks/question_card.html' %}
+    </a>
+    {% empty %}
+    <p>Поиск не дал результата.</p>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
