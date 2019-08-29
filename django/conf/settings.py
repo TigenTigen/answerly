@@ -165,3 +165,17 @@ MAILING_LIST_LINK_DOMAIN = 'http://' + ALLOWED_HOSTS[0]
 ES_INDEX = 'answerly'
 ES_HOST = 'elasticsearch'
 ES_PORT = '9200'
+ES_USERNAME = get_secret(os.getenv('ES_USERNAME_FILE'))
+ES_PASSWORD = get_secret(os.getenv('ES_PASSWORD_FILE'))
+ES_URL = 'http://{}:{}@{}:{}'.format(ES_USERNAME, ES_PASSWORD, ES_HOST, ES_PORT)
+
+#haystack settings:
+INSTALLED_APPS = ['haystack',] + INSTALLED_APPS
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack_es.backends.Elasticsearch5SearchEngine',
+        'URL': ES_URL,
+        'INDEX_NAME': ES_INDEX,
+    },
+}
+HAYSTACK_SIGNAL_PROCESSOR = 'core.search_indexes.QuestionOnlySignalProcessor'

@@ -20,7 +20,7 @@ services:
       replicas: 1
 
   elasticsearch:
-    image: elasticsearch:7.3.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
     networks:
       - elasticsearch_int_network
     volumes:
@@ -61,6 +61,8 @@ services:
       - django-eh
       - django-ehu
       - django-ehp
+      - es-un
+      - es-pw
     environment:
       HOST_IP: $HOST_IP
       HOST_NAME: $HOST_NAME
@@ -71,6 +73,8 @@ services:
       DJANGO_EH_FILE: /run/secrets/django-eh
       DJANGO_EHU_FILE: /run/secrets/django-ehu
       DJANGO_EHP_FILE: /run/secrets/django-ehp
+      ES_USERNAME_FILE: /run/secrets/es-un
+      ES_PASSWORD_FILE: /run/secrets/es-pw
     restart: always
     depends_on:
       - postgres
@@ -124,3 +128,7 @@ secrets:
     file : secrets/django-ehu
   django-ehp:
     file : secrets/django-ehp
+  es-un:
+    file : secrets/es-un
+  es-pw:
+    file : secrets/es-pw

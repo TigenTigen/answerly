@@ -36,8 +36,6 @@ ADD django-site.conf /etc/apache2/sites-available/000-default.conf
 
 RUN mkdir django
 
-HEALTHCHECK --start-period=1m CMD curl -f -XPUT http://elasticsearch:9200/answerly || exit 1
-
 COPY entrypoint_script.sh /var/www/html/django_project/entrypoint_script.sh
 ENTRYPOINT . /var/www/html/django_project/entrypoint_script.sh
 

@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('user.urls', namespace='user')),
     path('', include('core.urls', namespace='core')),
+    path('search/', include('haystack.urls')),
 ]

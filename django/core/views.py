@@ -95,16 +95,52 @@ class TodayQuestionListView(RedirectView):
         today = timezone.now()
         return reverse('core:daily_questions', kwargs={'day': today.day, 'month': today.month, 'year': today.year})
 
-class SearchView(TemplateView):
-    template_name = 'core/search.html'
+from haystack.generic_views import SearchView
+from haystack.forms import SearchForm
+from haystack_es.query import SearchQuerySet
+from django.core.paginator import InvalidPage, Paginator
 
-    def get_context_data(self, **kwargs):
-        query = self.request.GET.get('query', None)
-        context = super().get_context_data(query=query, **kwargs)
-        if query:
-            results = search_for_questions(query)
-            id = []
-            for hit in results:
-                id.append(hit['id'])
-            context['hits'] = Question.objects.filter(id__in = id)
+def search(request):
+    if 'q' in request.GET:
+        query = request.GET.get('q', '').strip()
+        results = SearchQuerySet().filter(content = query)
+        context = {'query': query, 'results': results}
+    else:
+        context = {}
+    return render(request, 'core/search.html', context)
+
+class CustomSearchView(SearchView):
+    template = 'core/search.html'
+    form_class = SearchForm
+    searchqueryset = SearchQuerySet()
+    results_per_page = 10
+
+    def __init__():
+        super().__init__(template = 'core/search.html', form_class = SearchForm, searchqueryset = SearchQuerySet(), results_per_page = 10)
+
+    def build_form(self, form_kwargs=None):
+        data = self.request.GET
+        return self.form_class(data)
+
+    def get_results(self):
+        results = self.form.search()
+        return results
+
+    def build_page(self):
+        page_no = int(self.request.GET.get("page", 1))
+        start_offset = (page_no - 1) * self.results_per_page
+        self.results[start_offset : start_offset + self.results_per_page]
+        paginator = Paginator(self.results, self.results_per_page)
+        page = paginator.page(page_no)
+        print('page_no = ', page_no, 'start_offset = ', start_offset, 'paginator = ', paginator, 'page = ', page)
+        return (paginator, page)
+
+    def get_context(self):
+        context = super().get_context()
+        results = [x.text for x in self.get_results()]
+        context.update({'results': results, 'data': self.request.GET, 'keys': context.keys(), 'x': 6})
         return context
+
+    def create_response(self):
+        context = self.get_context()
+        return render(self.request, self.template, context)

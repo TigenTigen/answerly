@@ -1,5 +1,7 @@
 django==2.1
 psycopg2-binary
 django-crispy-forms==1.7.0
-elasticsearch
+django-haystack
+django-haystack-es
+elasticsearch>=5,<6
 coverage===4.4.2
