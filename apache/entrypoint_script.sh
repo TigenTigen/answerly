@@ -28,6 +28,8 @@ echo '\e[92m Создание миграций:'
 python manage.py makemigrations user core
 echo '\e[92m Применение миграций:'
 python manage.py migrate
+echo '\e[92m Обновление поискового индекса:'
+python manage.py rebuild_index --noinput
 
 echo '\e[92m Запуск сервера  apache2:'
 apache2ctl -D FOREGROUND

@@ -1,0 +1,6 @@
+<div class="card my-2">
+  <div class="card-body">
+    <h5 class="card-title">{{object.title}}</h5>
+    <p class="card-text">{{object.text}}</p>
+  </div>
+</div>

@@ -5,3 +5,4 @@ django-haystack
 django-haystack-es
 elasticsearch>=5,<6
 coverage===4.4.2
+simplejson

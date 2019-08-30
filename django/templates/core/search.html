@@ -10,11 +10,12 @@
 
     {% for object in results %}
         <a href="{% url 'core:question' object.pk %}" class="list-group-item-action p-0">
-          {{object.text}}
+          {{object.rendered|safe}}
         </a>
         <br>
       {% empty %}
           <p>Поиск не дал результата.</p>
       {% endfor %}
   {% endif %}
+
 {% endblock %}

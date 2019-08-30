@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.urls.base import reverse
-from core import elasticsearch
 
 USERMODEL = settings.AUTH_USER_MODEL
 

@@ -7,6 +7,8 @@ from core.models import Question
 class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     created = indexes.DateTimeField(model_attr='created')
+    content_auto = indexes.EdgeNgramField(model_attr='title')
+    rendered = indexes.CharField(use_template=True, indexed=False)
 
     '''
     var: {
