@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, DayArchiveView, RedirectView, ListView, TemplateView
 from django.utils import timezone
@@ -94,6 +94,8 @@ class TodayQuestionListView(RedirectView):
         today = timezone.now()
         return reverse('core:daily_questions', kwargs={'day': today.day, 'month': today.month, 'year': today.year})
 
+# ELASTICSEARCH
+
 from haystack_es.query import SearchQuerySet
 import simplejson as json
 from django.http import HttpResponse
@@ -112,3 +114,19 @@ def autocomplete(request):
     suggestions = [result.title for result in sqs]
     the_data = json.dumps({'results': suggestions})
     return HttpResponse(the_data, content_type='application/json')
+
+# MAILER
+
+import requests
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from core.mailer import subscribe_user_to_question_updates
+
+ROOT_URL = settings.MAILER_URL
+
+@login_required
+def subscribe(request, question_id):
+    user = request.user
+    question = get_object_or_404(Question, id = question_id)
+    created = subscribe_user_to_question_updates(user, question)
+    return render(request, 'core/subscribton_done.html', {'created': created, 'question_id': question_id})

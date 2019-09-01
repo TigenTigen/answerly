@@ -1,0 +1,15 @@
+{% extends 'layout/modal_wrapper.html' %}
+
+{% block title %}Подписка на обновления{% endblock %}
+{% block modal_title %}Подписка на обновления{% endblock %}
+
+{% block modal_content %}
+  {% if created %}
+    <p>Подписка на обновление данного вопроса создана. Проверьте свой ящик электронной почты для подтверждения подписки</p>
+  {% else %}
+    <p>К сожалению, произошла ошибка, повторите попытку позже</p>
+  {% endif %}
+  <div class="modal-footer">
+    <a class="btn btn-warning" type="button" href="{% url 'core:question' question_id %}">Вернуться к вопросу</a>
+  </div>
+{% endblock %}

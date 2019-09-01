@@ -4,6 +4,11 @@
 
 {% block content %}
   {% include 'core/question_detail_blocks/question_card.html' %}
+  {% if user.email %}
+  <a href="{% url 'core:subscribe' object.id %}" class="btn btn-warning my-2" type="button">
+    Подписаться на обновления
+  </a>
+  {% endif %}
   {% for answer in object.answer_set.all %}
     {% include 'core/question_detail_blocks/answer_card.html' %}
   {% empty %}

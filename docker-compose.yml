@@ -63,6 +63,8 @@ services:
       - django-ehp
       - es-un
       - es-pw
+      - mailer-un
+      - mailer-pw
     environment:
       HOST_IP: $HOST_IP
       HOST_NAME: $HOST_NAME
@@ -75,6 +77,8 @@ services:
       DJANGO_EHP_FILE: /run/secrets/django-ehp
       ES_USERNAME_FILE: /run/secrets/es-un
       ES_PASSWORD_FILE: /run/secrets/es-pw
+      MAILER_USERNAME_FILE: /run/secrets/mailer-un
+      MAILER_PASSWORD_FILE: /run/secrets/mailer-pw
     restart: always
     depends_on:
       - postgres
@@ -132,3 +136,7 @@ secrets:
     file : secrets/es-un
   es-pw:
     file : secrets/es-pw
+  mailer-un:
+    file : secrets/mailer-un
+  mailer-pw:
+    file : secrets/mailer-pw

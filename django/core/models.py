@@ -9,6 +9,7 @@ class Question(models.Model):
     text = models.TextField('Текст вопроса')
     user = models.ForeignKey(to=USERMODEL, on_delete=models.CASCADE)
     created = models.DateTimeField('Дата публикации', auto_now_add=True)
+    mailinglist_id = models.UUIDField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Вопрос'

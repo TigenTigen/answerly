@@ -179,3 +179,8 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'core.search_indexes.QuestionOnlySignalProcessor'
+
+MAILER_BASE_API_URL = 'li2042-77.members.linode.com/api/v1/'
+MAILER_USERNAME = get_secret(os.getenv('MAILER_USERNAME_FILE'))
+MAILER_PASSWORD = get_secret(os.getenv('MAILER_PASSWORD_FILE'))
+MAILER_URL = 'http://{}:{}@{}'.format(MAILER_USERNAME, MAILER_PASSWORD, MAILER_BASE_API_URL)

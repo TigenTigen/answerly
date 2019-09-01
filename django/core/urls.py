@@ -11,6 +11,7 @@ urlpatterns = [
     path('user_questions/my/', UserQuestionList.as_view(), name='my_questions'),
     path('daily_questions/<int:year>/<int:month>/<int:day>', DailyQuestionListView.as_view(), name='daily_questions'),
     path('today_questions', TodayQuestionListView.as_view(), name='today_questions'),
-    #path('search', CustomSearchView.as_view(), name='search'),
     path('search', search, name='search'),
+    #mailer
+    path('subscribe/<int:question_id>', subscribe, name='subscribe'),
 ]
