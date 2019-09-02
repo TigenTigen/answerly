@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DetailView, UpdateView, DayArchiveView, RedirectView, ListView, TemplateView
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 from core.models import *
 from core.forms import *
+from core.mailer import subscribe_user_to_question_updates, subscribers
 
 class AskQuestionView(LoginRequiredMixin, CreateView):
     form_class = QuestionForm
@@ -34,6 +36,9 @@ class QuestionDetailView(DetailView):
                 'accept_form': AnswerAcceptanceForm(initial={'is_accepted': True}),
                 'reject_form': AnswerAcceptanceForm(initial={'is_accepted': False})
                 })
+        if self.object.mailinglist_id:
+            count, is_subscribed = subscribers(self.object, self.request.user)
+            context.update({'subscribers_count': count, 'user_is_subscribed': is_subscribed})
         return context
 
 class CreateAnswerView(CreateView):
@@ -116,13 +121,6 @@ def autocomplete(request):
     return HttpResponse(the_data, content_type='application/json')
 
 # MAILER
-
-import requests
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from core.mailer import subscribe_user_to_question_updates
-
-ROOT_URL = settings.MAILER_URL
 
 @login_required
 def subscribe(request, question_id):

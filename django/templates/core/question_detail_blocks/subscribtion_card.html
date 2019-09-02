@@ -1,0 +1,19 @@
+{% block answer_post_form %}
+  <div class="card text-white bg-warning my-2">
+    <div class="card-body">
+      <h5 class="card-title">Подписаться на обновления:</h5>
+      <div class="card-body row justify-content-around align-items-center p-0">
+        <div>
+          Подписано на обновления: {{subscribers_count|default_if_none:'0'}}
+        </div>
+        {% if user_is_subscribed %}
+          <div>Вы подписаны на обновления</div>
+        {% else %}
+          <a href="{% url 'core:subscribe' object.id %}" class="btn btn-white bg-light text-dark" type="button">
+            Подписаться на обновления
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

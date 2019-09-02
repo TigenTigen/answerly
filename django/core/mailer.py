@@ -27,3 +27,28 @@ def subscribe_user_to_question_updates(user, question):
     }
     r = requests.post(url, json = new_subscriber_dict)
     return r.status_code == 201
+
+def subscribers(question, user):
+    mailinglist_id = get_mailinglist_id(question)
+    url = ROOT_URL + 'mailinglist/{}/subscribers'.format(mailinglist_id)
+    r = requests.get(url)
+    subscribers = r.json()
+    count = len(subscribers)
+    is_subscribed = False
+    if user.is_authenticated and user.email:
+        for subscriber in subscribers:
+            if subscriber['email'] == user.email:
+                is_subscribed = True
+                break
+    return count, is_subscribed
+
+def make_message(answer):
+    question = answer.question
+    mailinglist_id = get_mailinglist_id(question)
+    url = ROOT_URL + 'mailinglist/{}/messages'.format(mailinglist_id)
+    new_message_dict = {
+        'subject': 'Новый ответ к вопросу "{}" на Answerly'.format(question.title),
+        'body': answer.text + '\n Сыллка для перехода к странице вопроса: {}'.format(question.get_domain_link())
+    }
+    r = requests.post(url, json = new_message_dict)
+    return r.status_code == 201
